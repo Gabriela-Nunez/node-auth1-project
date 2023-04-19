@@ -21,16 +21,14 @@ const usersRouter = require('../api/users/users-router')
 
 const server = express();
 
-server.use(helmet());
-server.use(express.json());
-server.use(cors());
 server.use(session({
   name: 'chocolatechip',
   secret: 'keep it secret',
   cookie: {
     maxAge: 1000 * 60 * 60,
-    secure:false,
-    httpOnly: false,
+    secure: false,
+    httpOnly: true,
+    // sameSite: 'none'
   },
   rolling: true,
   resave: false,
@@ -43,6 +41,10 @@ server.use(session({
     clearInterval: 1000 * 60 * 60,
   })
 }))
+
+server.use(helmet());
+server.use(express.json());
+server.use(cors());
 
 server.use('/api/auth', authRouter)
 server.use('/api/users', usersRouter)

@@ -2,6 +2,8 @@
 const express = require('express')
 const router = express.Router()
 
+const User = require('../users/users-model')
+const { restricted } = require('../../api/auth/auth-middleware')
 /**
   [GET] /api/users
 
@@ -24,7 +26,13 @@ const router = express.Router()
     "message": "You shall not pass!"
   }
  */
-
+router.get('/', restricted, (req, res, next) => {
+  User.find()
+  .then(users => {
+    res.status(200).json(users)
+  })
+  .catch(next)
+})
 
 // Don't forget to add the router to the `exports` object so it can be required in other modules
 module.exports = router
